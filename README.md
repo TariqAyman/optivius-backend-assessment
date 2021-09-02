@@ -1,24 +1,108 @@
-# Lumen PHP Framework
+# Challenge Idea
+Make a simple API to make a profile for users with Articles in multi-languages.
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+### Construction
+- Users
+  --
+    - Name (json) => multi-language ex:{"en": "ahmed", "ar": "احمد"}.
+    - Phone (number) Unique.
+    - Password (string) => Hashed.
+    - Email (string) => Unique.
+    - Verified email at (datetime).
+    - Verified phone at (datetime).
+- Articles
+  --
+    - Title (json) => multi-language.
+    - Content (json) => multi-language.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+### Api Pages
+- Register
+  --
+    - Email or Phone is required.
+    - Inputs example:
+``` json
+{
+    "name": {"en": "ahmed", "ar": "احمد"},
+    "phone": "010123456789",
+    "password": "123456",
+    "email": "test@test.com"
+}
+```
+- Verify account
+  -
+    - Can verify with email.
+    - Can Verify with phone (Create a fake SMS Api for now to verify the phone and accept immediatlly).
+- Login
+  -
+    - User can login with Email or Phone number.
+    - password.
+    - User must be verified.
+- Create/Update Articles
+  -
+    - Token must be provided.
+    - All languages are required.
+    - Input example:
+``` json
+{
+    "title": {
+        "en": "Article title", 
+        "ar": "عنوان المقاله"
+    },
+    "content": {
+        "en": "Article content (HTML not allowed)",
+        "ar": "محتوى المقالة"
+    }
+}
+```
+- Delete Article by ID and token
+  -
+- View Profile with articles
+  --
+    - Must provide Token.
+    - View profile with selected language only ex: "?lang=en" to select english.
+    - Password must be not visiable.
+    - Output example:
+``` json
+{
+    "errors": false,
+    "results": {
+        "name": "name (Show name only in Selected language)",
+        "phone": "010123456789",
+        "email": "test@test.com",
+        "created_at": "2021-08-21T07:37:43.000000Z",
+        "articles": [
+            {
+                "title": "Article 1 in English"
+                "content": "Article Content 2 in English"
+                "created_at": "2021-08-21T07:37:43.000000Z"
+            },
+            {
+                "title": "Article 2 in English"
+                "content": "Article Content 2 in English"
+                "created_at": "2021-08-21T07:37:43.000000Z"
+            },
+        ]
+    }
+}
+```
 
-## Official Documentation
+## Acceptance Criteria
+- Provided solutions should be implemented in Lumen ^8.*.
+- List of languages must be according to a Config (ex: config/locales.php) file also can change it from .env file.
+- Database must be include two tables only (Profiles, Articles).
+- All response exceptions must have a return with appropriate status number.
+- Take care about pages validation in high level.
+- database must be in migration.
+- All queries must be using ORM (No direct queries allowed).
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+## Nice to be included
+- Use docker compose to run this example.
+- Use scopes on ORM.
+- Unit tests coverage.
 
-## Contributing
-
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## The Evaluation
+###### Task will be evaluated based on:
+- Code quality.
+- Application performance in reading large amount of records.
+- Code scalability : ability to change (add/remove lanuages) must cover missing languages in view profile.
+- No exceptions.
