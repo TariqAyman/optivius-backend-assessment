@@ -8,10 +8,15 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory;
+
+    use LocaleTraits;
+
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +24,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'email', 'phone', 'api_token', 'password', 'email_verified_token', 'phone_verified_code'
     ];
 
     /**
@@ -28,6 +33,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password', 'email_verified_token', 'phone_verified_code'
     ];
+
+    protected $casts = [
+        'name' => 'json'
+    ];
+
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->getLocale($this->attributes['name']);
+    }
+
 }
